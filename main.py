@@ -32,6 +32,7 @@ NUM_CHANNELS = 3
 if len(image.shape) == NUM_CHANNELS:
     grayscale = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
 
+
 # =====================================================
 # IMAGE FILTERING (using adaptive thresholding)
 # =====================================================
@@ -48,11 +49,19 @@ The last two parameters to the adaptiveThreshold function are the size of the ne
 the constant C which is subtracted from the mean or weighted mean calculated.
 """
 MAX_THRESHOLD_VALUE = 255
-BLOCK_SIZE = 15
-THRESHOLD_CONSTANT = 0
+BLOCK_SIZE = 101
+THRESHOLD_CONSTANT = 10
 
 # Filter image
-filtered = cv.adaptiveThreshold(~grayscale, MAX_THRESHOLD_VALUE, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, BLOCK_SIZE, THRESHOLD_CONSTANT)
+# filtered = cv.adaptiveThreshold(~grayscale, MAX_THRESHOLD_VALUE, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, BLOCK_SIZE, THRESHOLD_CONSTANT)
+# utils.showImg('filtered', filtered, 5000)
+
+_, filtered = cv.threshold(~grayscale, 127, 255, cv.THRESH_BINARY)
+# utils.showImg('binary', binary, 5000)
+
+
+# quit()
+
 
 # =====================================================
 # LINE ISOLATION
@@ -158,7 +167,7 @@ for table in tables:
             fname = out + "table/cell" + str(num_img) + ".jpg"
             cv.imwrite(fname, entry_roi)
 
-            fname = utils.run_textcleaner(fname, num_img)
+            # fname = utils.run_textcleaner(fname, num_img)
             text = utils.run_tesseract(fname, num_img, psm, oem)
 
             num_img += 1
